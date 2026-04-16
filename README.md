@@ -1,2 +1,3 @@
 # where-is-mom
-For fun tracking on vacations
+Provides a history of a family trip on a cruise ship.
+
