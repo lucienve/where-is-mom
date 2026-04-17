@@ -141,6 +141,14 @@ switch ($action) {
         }
 
         $tmpPath = $_FILES['photo']['tmp_name'];
+
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/heic'];
+        $mimeType = mime_content_type($tmpPath);
+        if (!in_array($mimeType, $allowedMimeTypes, true)) {
+            http_response_code(400);
+            exit(json_encode(['error' => 'Invalid file type. Only JPEG, PNG, and HEIC are allowed.']));
+        }
+
         $gpsData = ExifExtractor::extractGps($tmpPath);
 
         $lat = null;
