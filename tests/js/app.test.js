@@ -40,7 +40,7 @@ describe('app.js Viewer Dashboard', () => {
       json: async () => ({authenticated: true, role: 'viewer', mapsApiKey: 'test_key'}),
     });
 
-    require('../app.js');
+    require('../../public/js/app.js');
 
     // Trigger DOMContentLoaded manually
     domReadyCallback();
@@ -63,7 +63,7 @@ describe('app.js Viewer Dashboard', () => {
           json: async () => ({success: false, message: 'Invalid test password'}),
         }); // login attempt
 
-    require('../app.js');
+    require('../../public/js/app.js');
 
     domReadyCallback();
     await new Promise((r) => setTimeout(r, 0));

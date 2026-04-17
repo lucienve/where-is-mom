@@ -44,7 +44,7 @@ describe('traveler.js Traveler Dashboard', () => {
       }),
     });
 
-    require('../traveler.js');
+    require('../../public/js/traveler.js');
     domReadyCallback();
     await new Promise((r) => setTimeout(r, 0));
 
@@ -68,7 +68,7 @@ describe('traveler.js Traveler Dashboard', () => {
           json: async () => ({success: true}),
         });
 
-    require('../traveler.js');
+    require('../../public/js/traveler.js');
     domReadyCallback();
     await new Promise((r) => setTimeout(r, 0));
 
