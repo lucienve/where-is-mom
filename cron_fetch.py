@@ -148,7 +148,7 @@ def parse_and_insert_location(db_conn: mysql.connector.connection.MySQLConnectio
     )
 
     insert_values: tuple = (
-        timestamp, float(lat), float(lng), speed, course, heading,
+        timestamp, float(lng), float(lat), speed, course, heading,
         destination, eta, draught, navigational_status, raw_response
     )
 
