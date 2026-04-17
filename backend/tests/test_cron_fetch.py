@@ -102,8 +102,8 @@ def test_parse_and_insert_location_valid(_mock_connect: MagicMock) -> None:
     params = args[1]
 
     assert "INSERT INTO locations" in query
-    assert params[1] == 34.0
-    assert params[2] == -118.0
+    assert params[1] == -118.0
+    assert params[2] == 34.0
     assert params[3] == 12.5
     assert params[4] == 180.0
     assert params[5] == 180.0
