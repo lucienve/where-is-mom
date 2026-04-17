@@ -27,3 +27,4 @@
 - **Phase 2:** MySQL Schema spatial indexing & strict type conversions. 
 - **Phase 3:** Datadocked API debugging (converting nested JSON expectations to Flat properties, resolving string-typing bugs for DECIMAL). 
 - **Phase 4:** Strict Style Enforcement. Migrated Python scripts to 10/10 pylint/pytest standards. Refactored PHP files to utilize PSR-4 autoloading (`backend/src/`), resolved all PSR-12 formatting issues, and enforced static analysis via `phpstan` at Level 5.
+- **Phase 5:** Repository Restructuring. Migrated web-accessible files to a dedicated `public/` directory pattern, shifting Apache security to an allow-list paradigm and eliminating verbose restriction blocklists.
