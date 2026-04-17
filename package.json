@@ -1,0 +1,31 @@
+{
+  "name": "where-is-mom",
+  "version": "1.0.0",
+  "description": "Provides a history of a family trip on a cruise ship.",
+  "main": "playwright.config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint js/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucienve/where-is-mom.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucienve/where-is-mom/issues"
+  },
+  "homepage": "https://github.com/lucienve/where-is-mom#readme",
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-google": "^0.14.0",
+    "jest": "^30.3.0",
+    "jest-environment-jsdom": "^30.3.0",
+    "prettier": "^3.8.3"
+  }
+}
