@@ -6,7 +6,6 @@ namespace Tests;
 
 use App\ExifExtractor;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
 
 /**
  * Class ExifExtractorTest
@@ -26,46 +25,37 @@ class ExifExtractorTest extends TestCase
     }
 
     /**
-     * Use Reflection to test the private getGpsCoordinate method logic.
+     * Tests that a valid image with GPS and timestamp parses correctly.
      */
-    public function testGetGpsCoordinateCalculation(): void
+    public function testExtractGpsValidImage(): void
     {
-        $reflection = new ReflectionClass(ExifExtractor::class);
-        $method = $reflection->getMethod('getGpsCoordinate');
-        $method->setAccessible(true);
+        $result = ExifExtractor::extractGps(__DIR__ . '/fixtures/valid_gps.jpg');
 
-        // Typical N/E coordinate
-        // 40 degrees, 45 minutes, 30 seconds
-        $coordArray = ["40/1", "45/1", "300/10"];
-        // 40 + (45/60) + (30/3600) = 40 + 0.75 + 0.008333... = 40.758333...
-        $result = $method->invoke(null, $coordArray, 'N');
-        $this->assertEqualsWithDelta(40.758333, $result, 0.0001);
-
-        // Typical S/W coordinate (should be negative)
-        // 73 degrees, 59 minutes, 0 seconds
-        $coordArrayW = ["73/1", "59/1", "0/1"];
-        // 73 + (59/60) = 73.98333...
-        $resultW = $method->invoke(null, $coordArrayW, 'W');
-        $this->assertEqualsWithDelta(-73.983333, $resultW, 0.0001);
+        $this->assertIsArray($result);
+        $this->assertEqualsWithDelta(40.758333, $result['lat'], 0.0001);
+        $this->assertEqualsWithDelta(-73.983333, $result['lng'], 0.0001);
+        $this->assertEquals('2026:04:17 12:00:00', $result['timestamp']);
     }
 
     /**
-     * Use Reflection to test the private evalFraction method logic.
+     * Tests that an image with EXIF but no GPS gracefully returns null.
      */
-    public function testEvalFraction(): void
+    public function testExtractGpsMissingGpsData(): void
     {
-        $reflection = new ReflectionClass(ExifExtractor::class);
-        $method = $reflection->getMethod('evalFraction');
-        $method->setAccessible(true);
+        $result = ExifExtractor::extractGps(__DIR__ . '/fixtures/missing_gps.jpg');
+        $this->assertNull($result, 'Expected null when GPS data is missing from EXIF.');
+    }
 
-        $this->assertEquals(40.0, $method->invoke(null, "40/1"));
-        $this->assertEquals(0.75, $method->invoke(null, "3/4"));
-        $this->assertEquals(30.0, $method->invoke(null, "300/10"));
+    /**
+     * Tests that an image with GPS but no timestamp parses GPS and returns null for timestamp.
+     */
+    public function testExtractGpsMissingTimestamp(): void
+    {
+        $result = ExifExtractor::extractGps(__DIR__ . '/fixtures/missing_timestamp.jpg');
 
-        // Handle malformed/zero denominator safely
-        $this->assertEquals(0.0, $method->invoke(null, "5/0"));
-
-        // Handle pure numbers / malformed
-        $this->assertEquals(45.0, $method->invoke(null, "45"));
+        $this->assertIsArray($result);
+        $this->assertEqualsWithDelta(40.758333, $result['lat'], 0.0001);
+        $this->assertEqualsWithDelta(-73.983333, $result['lng'], 0.0001);
+        $this->assertNull($result['timestamp']);
     }
 }
