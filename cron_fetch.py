@@ -83,7 +83,7 @@ def main():
             return
             
         # Record the current server time as the timestamp, with the last known position
-        timestamp = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+        timestamp = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%d %H:%M:%S')
 
         def parse_float(val):
             if not val or val == '-' or str(val).startswith('- '):
