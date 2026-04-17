@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
             modeToggle.checked = data.onShipMode;
             updateToggleText(data.onShipMode);
           }
+        })
+        .catch((err) => {
+          console.error('Failed to check status:', err);
         });
   }
 
@@ -49,6 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
             errorMsg.textContent = data.message || 'Invalid password';
           }
+        })
+        .catch(() => {
+          errorMsg.textContent = 'Network error during login.';
         });
   });
 
@@ -63,7 +69,14 @@ document.addEventListener('DOMContentLoaded', () => {
         .then((data) => {
           if (data.success) {
             updateToggleText(isShip);
+          } else {
+            e.target.checked = !isShip;
+            alert('Failed to update mode: ' + (data.error || 'Unknown error'));
           }
+        })
+        .catch(() => {
+          e.target.checked = !isShip;
+          alert('Network error while updating mode.');
         });
   });
 
