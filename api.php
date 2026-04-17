@@ -98,9 +98,9 @@ switch ($action) {
         );
 
         $stmt = $pdo->prepare("
-            SELECT id, source, timestamp, ST_X(coordinates) as lng, ST_Y(coordinates) as lat, image_path 
+            SELECT id, source, timestamp, ST_Longitude(coordinates) as lng, ST_Latitude(coordinates) as lat, image_path 
             FROM locations 
-            WHERE MBRContains(ST_SRID(ST_GeomFromText(?), 4326), coordinates)
+            WHERE MBRContains(ST_GeomFromText(? , 4326, 'axis-order=long-lat'), coordinates)
             ORDER BY timestamp ASC
         ");
         $stmt->execute([$polygon]);
@@ -114,7 +114,7 @@ switch ($action) {
             http_response_code(401);
             exit(json_encode(['error' => 'Unauthorized']));
         }
-        $stmt = $pdo->prepare("SELECT ST_X(coordinates) as lng, ST_Y(coordinates) as lat, timestamp FROM locations ORDER BY timestamp DESC LIMIT 1");
+        $stmt = $pdo->prepare("SELECT ST_Longitude(coordinates) as lng, ST_Latitude(coordinates) as lat, timestamp FROM locations ORDER BY timestamp DESC LIMIT 1");
         $stmt->execute();
         $latest = $stmt->fetch();
         echo json_encode(['success' => true, 'data' => $latest]);
@@ -149,7 +149,7 @@ switch ($action) {
             $gpsMissing = false;
         } else {
             // Fallback to most recent known location
-            $stmt = $pdo->prepare("SELECT ST_X(coordinates) as lng, ST_Y(coordinates) as lat FROM locations ORDER BY timestamp DESC LIMIT 1");
+            $stmt = $pdo->prepare("SELECT ST_Longitude(coordinates) as lng, ST_Latitude(coordinates) as lat FROM locations ORDER BY timestamp DESC LIMIT 1");
             $stmt->execute();
             $recent = $stmt->fetch();
             if ($recent) {
@@ -177,7 +177,7 @@ switch ($action) {
                 INSERT INTO locations (source, timestamp, coordinates, image_path) 
                 VALUES ('photo', ?, ST_SRID(Point(?, ?), 4326), ?)
             ");
-            $stmt->execute([$timestamp, $lat, $lng, $objectName]);
+            $stmt->execute([$timestamp, $lng, $lat, $objectName]);
             
             echo json_encode([
                 'success' => true, 
