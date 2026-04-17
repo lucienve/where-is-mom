@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 use App\ExifExtractor;
 use Google\Cloud\Storage\StorageClient;
 
 session_start();
 
-$config = parse_ini_file(__DIR__ . '/config.ini');
+$config = parse_ini_file(__DIR__ . '/../config.ini');
 putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $config['GOOGLE_APPLICATION_CREDENTIALS']);
 
 header('Content-Type: application/json');
