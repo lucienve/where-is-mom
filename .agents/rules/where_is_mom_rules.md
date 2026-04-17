@@ -15,9 +15,15 @@ Ensure all code and syntax is explicitly compatible with the following versions:
 - **PHP:** `8.3.6`
 - **MySQL:** `8.4.8`
 - **Python:** `3.11+` (Relaxed from 3.12 to support native Debian 12 developer environments while maintaining forward-compatibility with Ubuntu production servers).
+- **Datadocked API:** The version described at https://docs.datadocked.com/api-reference/openapi.json
 
 ## 3. Backend Directives: Python Architecture
 - **Database Rules:** Connect using `mysql-connector-python`. **Do not use an ORM**. You must use strictly parameterized queries / prepared statements for all database interactions. String interpolation or concatenation for SQL queries is strictly forbidden to prevent SQL injections.
+- **Datadocked API:** 
+  - Requests must use `GET https://datadocked.com/api/vessels_operations/get-vessel-location?imo_or_mmsi=...` (do NOT use `/v1/...` routes).
+  - Authentication requires `x-api-key: <key>` and `accept: application/json` headers (do NOT use Bearer tokens).
+  - The JSON response payload is a flat dictionary returned from the API.
+  - For timestamps, prioritize parsing `"positionReceived"` or `"updateTime"` instead of `"timestamp"`. Note that they come formatted as `"Apr 16, 2026 23:42 UTC"` and thus require `strptime` with `"%b %d, %Y %H:%M UTC"`.
 
 ## 4. Backend Directives: PHP
 - **Documentation:** Utilize clear PHPDoc-style block comments (`/** ... */`) for functions, classes, and properties.
