@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
@@ -59,7 +60,7 @@ try {
     }
 
     $info = $object->info();
-    
+
     // Set proper headers to stream to browser
     header('Content-Type: ' . ($info['contentType'] ?? 'image/jpeg'));
     header('Content-Length: ' . $info['size']);
@@ -70,7 +71,6 @@ try {
     while (!$stream->eof()) {
         echo $stream->read(8192);
     }
-    
 } catch (Exception $e) {
     http_response_code(500);
     exit('Internal Server Error');

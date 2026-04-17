@@ -1,27 +1,37 @@
 <?php
+
 declare(strict_types=1);
 
+namespace App;
+
+/**
+ * Class ExifExtractor
+ *
+ * Provides utility methods for extracting GPS coordinates from image files.
+ */
 class ExifExtractor
 {
     /**
      * Extracts latitude and longitude from an image file's EXIF data.
      *
      * @param string $filePath The path to the temporary uploaded image file.
-     * @return array|null Returns associative array with 'lat' and 'lng', or null if missing.
+     * @return array<string, float|string|null>|null Returns associative array with 'lat' and 'lng', or null if missing.
      */
     public static function extractGps(string $filePath): ?array
     {
         // Suppress warnings as exif_read_data can complain about certain invalid JPEGs
         $exif = @exif_read_data($filePath);
-        
-        if (!$exif || !isset($exif['GPSLatitude']) || !isset($exif['GPSLongitude']) || 
-            !isset($exif['GPSLatitudeRef']) || !isset($exif['GPSLongitudeRef'])) {
+
+        if (
+            !$exif || !isset($exif['GPSLatitude']) || !isset($exif['GPSLongitude']) ||
+            !isset($exif['GPSLatitudeRef']) || !isset($exif['GPSLongitudeRef'])
+        ) {
             return null;
         }
 
         $lat = self::getGpsCoordinate($exif['GPSLatitude'], $exif['GPSLatitudeRef']);
         $lng = self::getGpsCoordinate($exif['GPSLongitude'], $exif['GPSLongitudeRef']);
-        
+
         // Also try to extract datetime original
         $timestamp = null;
         if (isset($exif['DateTimeOriginal'])) {
@@ -38,7 +48,7 @@ class ExifExtractor
     /**
      * Converts EXIF GPS coordinate arrays to a decimal float.
      *
-     * @param array $coordinateArray
+     * @param array<int, string> $coordinateArray
      * @param string $hemisphereRef
      * @return float
      */
@@ -47,14 +57,15 @@ class ExifExtractor
         $degrees = self::evalFraction($coordinateArray[0] ?? "0/1");
         $minutes = self::evalFraction($coordinateArray[1] ?? "0/1");
         $seconds = self::evalFraction($coordinateArray[2] ?? "0/1");
-        
+
+
         $decimal = $degrees + ($minutes / 60) + ($seconds / 3600);
-        
+
         $hemisphereRef = strtoupper($hemisphereRef);
         if ($hemisphereRef === 'S' || $hemisphereRef === 'W') {
             $decimal *= -1;
         }
-        
+
         return $decimal;
     }
 

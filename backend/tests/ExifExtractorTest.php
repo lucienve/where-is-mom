@@ -1,10 +1,18 @@
 <?php
+
 declare(strict_types=1);
 
+namespace Tests;
+
+use App\ExifExtractor;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
 
-require_once __DIR__ . '/../../ExifExtractor.php';
-
+/**
+ * Class ExifExtractorTest
+ *
+ * Tests the ExifExtractor utility class.
+ */
 class ExifExtractorTest extends TestCase
 {
     /**
@@ -22,13 +30,13 @@ class ExifExtractorTest extends TestCase
      */
     public function testGetGpsCoordinateCalculation(): void
     {
-        $reflection = new ReflectionClass('ExifExtractor');
+        $reflection = new ReflectionClass(ExifExtractor::class);
         $method = $reflection->getMethod('getGpsCoordinate');
         $method->setAccessible(true);
 
         // Typical N/E coordinate
         // 40 degrees, 45 minutes, 30 seconds
-        $coordArray = ["40/1", "45/1", "300/10"]; 
+        $coordArray = ["40/1", "45/1", "300/10"];
         // 40 + (45/60) + (30/3600) = 40 + 0.75 + 0.008333... = 40.758333...
         $result = $method->invoke(null, $coordArray, 'N');
         $this->assertEqualsWithDelta(40.758333, $result, 0.0001);
@@ -46,17 +54,17 @@ class ExifExtractorTest extends TestCase
      */
     public function testEvalFraction(): void
     {
-        $reflection = new ReflectionClass('ExifExtractor');
+        $reflection = new ReflectionClass(ExifExtractor::class);
         $method = $reflection->getMethod('evalFraction');
         $method->setAccessible(true);
 
         $this->assertEquals(40.0, $method->invoke(null, "40/1"));
         $this->assertEquals(0.75, $method->invoke(null, "3/4"));
         $this->assertEquals(30.0, $method->invoke(null, "300/10"));
-        
+
         // Handle malformed/zero denominator safely
         $this->assertEquals(0.0, $method->invoke(null, "5/0"));
-        
+
         // Handle pure numbers / malformed
         $this->assertEquals(45.0, $method->invoke(null, "45"));
     }

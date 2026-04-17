@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"Tests\\ExifExtractorTest::testExtractGpsReturnsNullForMissingOrInvalidFile":0.003,"Tests\\ExifExtractorTest::testGetGpsCoordinateCalculation":0,"Tests\\ExifExtractorTest::testEvalFraction":0}}

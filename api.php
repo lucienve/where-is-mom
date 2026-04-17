@@ -1,9 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 require __DIR__ . '/vendor/autoload.php';
-require __DIR__ . '/ExifExtractor.php';
 
+use App\ExifExtractor;
 use Google\Cloud\Storage\StorageClient;
 
 session_start();
@@ -47,12 +48,12 @@ switch ($action) {
 
     case 'status':
         $role = $_SESSION['role'] ?? null;
-        
+
         $stmt = $pdo->prepare("SELECT state_value FROM app_state WHERE state_key = 'tracking_mode_on_ship'");
         $stmt->execute();
         $state = $stmt->fetch();
         $isShipMode = ($state && $state['state_value'] === '1');
-        
+
         // Also securely pass map key ONLY if logged in
         $mapKey = $role ? $config['GOOGLE_MAPS_API_KEY'] : null;
 
@@ -80,7 +81,7 @@ switch ($action) {
             http_response_code(401);
             exit(json_encode(['error' => 'Unauthorized']));
         }
-        
+
         // Bounding box parameters
         $west = (float)($_GET['w'] ?? -180.0);
         $south = (float)($_GET['s'] ?? -90.0);
@@ -90,11 +91,16 @@ switch ($action) {
         // MBRContains polygon construction string
         $polygon = sprintf(
             'POLYGON((%f %f, %f %f, %f %f, %f %f, %f %f))',
-            $west, $south,
-            $east, $south,
-            $east, $north,
-            $west, $north,
-            $west, $south
+            $west,
+            $south,
+            $east,
+            $south,
+            $east,
+            $north,
+            $west,
+            $north,
+            $west,
+            $south
         );
 
         $stmt = $pdo->prepare("
@@ -105,7 +111,7 @@ switch ($action) {
         ");
         $stmt->execute([$polygon]);
         $locations = $stmt->fetchAll();
-        
+
         echo json_encode(['success' => true, 'data' => $locations]);
         break;
 
@@ -114,7 +120,10 @@ switch ($action) {
             http_response_code(401);
             exit(json_encode(['error' => 'Unauthorized']));
         }
-        $stmt = $pdo->prepare("SELECT ST_Longitude(coordinates) as lng, ST_Latitude(coordinates) as lat, timestamp FROM locations ORDER BY timestamp DESC LIMIT 1");
+        $stmt = $pdo->prepare(
+            "SELECT ST_Longitude(coordinates) as lng, ST_Latitude(coordinates) as lat, timestamp " .
+            "FROM locations ORDER BY timestamp DESC LIMIT 1"
+        );
         $stmt->execute();
         $latest = $stmt->fetch();
         echo json_encode(['success' => true, 'data' => $latest]);
@@ -133,7 +142,7 @@ switch ($action) {
 
         $tmpPath = $_FILES['photo']['tmp_name'];
         $gpsData = ExifExtractor::extractGps($tmpPath);
-        
+
         $lat = null;
         $lng = null;
         $timestamp = date('Y-m-d H:i:s');
@@ -144,12 +153,17 @@ switch ($action) {
             $lng = $gpsData['lng'];
             if ($gpsData['timestamp']) {
                 $dt = DateTime::createFromFormat('Y:m:d H:i:s', $gpsData['timestamp']);
-                if ($dt) $timestamp = $dt->format('Y-m-d H:i:s');
+                if ($dt) {
+                    $timestamp = $dt->format('Y-m-d H:i:s');
+                }
             }
             $gpsMissing = false;
         } else {
             // Fallback to most recent known location
-            $stmt = $pdo->prepare("SELECT ST_Longitude(coordinates) as lng, ST_Latitude(coordinates) as lat FROM locations ORDER BY timestamp DESC LIMIT 1");
+            $stmt = $pdo->prepare(
+                "SELECT ST_Longitude(coordinates) as lng, ST_Latitude(coordinates) as lat " .
+                "FROM locations ORDER BY timestamp DESC LIMIT 1"
+            );
             $stmt->execute();
             $recent = $stmt->fetch();
             if ($recent) {
@@ -165,7 +179,7 @@ switch ($action) {
         try {
             $storage = new StorageClient(['projectId' => $config['GCP_PROJECT_ID']]);
             $bucket = $storage->bucket($config['GCS_BUCKET_NAME']);
-            
+
             $objectName = 'photos/' . uniqid() . '_' . basename($_FILES['photo']['name']);
             $bucket->upload(
                 fopen($tmpPath, 'r'),
@@ -178,14 +192,13 @@ switch ($action) {
                 VALUES ('photo', ?, ST_SRID(Point(?, ?), 4326), ?)
             ");
             $stmt->execute([$timestamp, $lng, $lat, $objectName]);
-            
+
             echo json_encode([
-                'success' => true, 
+                'success' => true,
                 'gps_missing' => $gpsMissing,
                 'fallback_lat' => $gpsMissing ? $lat : null,
                 'fallback_lng' => $gpsMissing ? $lng : null
             ]);
-
         } catch (Exception $e) {
             http_response_code(500);
             exit(json_encode(['error' => 'Storage error: ' . $e->getMessage()]));
