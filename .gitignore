@@ -10,6 +10,7 @@ secrets/
 
 # PHP
 vendor/
+.phpunit.cache/
 
 # Node (if used later)
 node_modules/
