@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where is Mom?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="loginOverlay" class="overlay active">
+        <div class="login-card glass">
+            <h1>Where is Mom?</h1>
+            <p>Enter the viewer password to track the journey.</p>
+            <input type="password" id="viewerPassword" placeholder="Password...">
+            <button id="loginBtn">Unlock Map</button>
+            <div id="loginError" class="error-msg"></div>
+        </div>
+    </div>
+
+    <div id="mapContainer"></div>
+
+    <div id="lightbox" class="overlay">
+        <div class="lightbox-content glass">
+            <button id="closeLightbox" class="close-btn">&times;</button>
+            <img id="lightboxImage" src="" alt="Travel Photo">
+            <div id="lightboxMeta" class="meta-box">
+                <span id="lightboxLat"></span>, <span id="lightboxLng"></span><br>
+                <span id="lightboxTime"></span>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/map.js"></script>
+</body>
+</html>

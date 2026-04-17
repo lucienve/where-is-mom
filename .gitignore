@@ -5,8 +5,8 @@ __pycache__/
 *$py.class
 
 # Environment Variables
-.env
-*.env
+config.ini
+secrets/
 
 # PHP
 vendor/
@@ -17,15 +17,6 @@ node_modules/
 # OS generated files
 .DS_Store
 Thumbs.db
-
-# Project Uploads (for local testing)
-uploads/
-
-# Data Files
-datadocked_key.txt
-qe_mmsi.txt
-sample_query.txt
-sample_response.txt
 
 # Agent Guidelines Ignore Strategy
 .agents/rules/*

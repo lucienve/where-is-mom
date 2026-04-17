@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mom's Controller</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="traveler-body">
+    <div id="loginOverlay" class="overlay active">
+        <div class="login-card glass">
+            <h1>Traveler Login</h1>
+            <input type="password" id="travelerPassword" placeholder="Traveler Password...">
+            <button id="loginBtn">Enter</button>
+            <div id="loginError" class="error-msg"></div>
+        </div>
+    </div>
+
+    <div id="travelerDashboard" class="dashboard glass" style="display: none;">
+        <h2>Location Status</h2>
+        <div class="toggle-container">
+            <span class="label">On Land</span>
+            <label class="switch">
+                <input type="checkbox" id="modeToggle">
+                <span class="slider round"></span>
+            </label>
+            <span class="label">On Ship</span>
+        </div>
+        <p id="modeStatusMsg" class="subtext">Currently tracking via Datadocked AIS.</p>
+
+        <hr>
+
+        <h2>Upload Photo</h2>
+        <p class="subtext">Photos form land stops. If EXIF GPS is missing, we use the last known ship location!</p>
+        
+        <input type="file" id="photoInput" accept="image/jpeg, image/png, image/heic">
+        <button id="uploadBtn" disabled>Upload Photo</button>
+
+        <div id="uploadFeedback" class="feedback-msg"></div>
+    </div>
+
+    <script src="js/traveler.js"></script>
+</body>
+</html>

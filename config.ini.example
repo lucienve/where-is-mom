@@ -1,0 +1,25 @@
+[config]
+# Environment Configuration - Where is Mom
+
+# Security & Authentication
+VIEWER_PASSWORD=your_viewer_password
+TRAVELER_PASSWORD=your_traveler_password
+
+# Google Maps (Frontend)
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+
+# Database Configuration (MySQL)
+DB_HOST=127.0.0.1
+DB_NAME=wim
+DB_USER=wim_user
+DB_PASS=wim_password
+
+# Datadocked Configuration (AIS)
+DATADOCKED_API_KEY=your_datadocked_api_key
+# Queen Elizabeth MMSI
+DATADOCKED_VESSEL_MMSI=310625000
+
+# Google Cloud Storage (Photos)
+GCP_PROJECT_ID=your_gcp_project_id
+GCS_BUCKET_NAME=your_gcs_bucket_name
+GOOGLE_APPLICATION_CREDENTIALS=secrets/your-service-account-file.json
