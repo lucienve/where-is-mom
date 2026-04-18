@@ -26,7 +26,7 @@ window.initMap = function() {
   map = new google.maps.Map(document.getElementById('mapContainer'), {
     center: {lat: 20, lng: 0},
     zoom: 7,
-    mapTypeId: 'satellite',
+    mapTypeId: 'roadmap',
     mapTypeControl: true,
     zoomControl: true,
     streetViewControl: false,
