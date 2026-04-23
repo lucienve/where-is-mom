@@ -1,11 +1,20 @@
 <?php
 
+/**
+ * Image serving endpoint
+ *
+ * @category API
+ * @package  WhereIsMom
+ */
+
 declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Storage\StorageClient;
 
+ini_set('session.gc_maxlifetime', '2592000');
+session_set_cookie_params(2592000);
 session_start();
 
 $config = parse_ini_file(__DIR__ . '/../config.ini');
@@ -35,7 +44,7 @@ try {
     );
 
     $stmt = $pdo->prepare("SELECT image_path FROM locations WHERE id = ? AND source = 'photo'");
-    $stmt->execute([(int)$id]);
+    $stmt->execute([(int) $id]);
     $location = $stmt->fetch();
 
     if (!$location || empty($location['image_path'])) {
@@ -46,10 +55,12 @@ try {
     $imagePath = $location['image_path'];
 
     // Retrieve from GCS
-    $storage = new StorageClient([
-        'projectId' => $config['GCP_PROJECT_ID'],
-        // GCP SDK implicitly finds GOOGLE_APPLICATION_CREDENTIALS when set in ENV
-    ]);
+    $storage = new StorageClient(
+        [
+            'projectId' => $config['GCP_PROJECT_ID'],
+            // GCP SDK implicitly finds GOOGLE_APPLICATION_CREDENTIALS when set in ENV
+        ]
+    );
 
     $bucket = $storage->bucket($config['GCS_BUCKET_NAME']);
     $object = $bucket->object($imagePath);

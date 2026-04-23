@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Main API endpoint
+ *
+ * @category API
+ * @package  WhereIsMom
+ */
+
 declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -7,6 +14,8 @@ require __DIR__ . '/../vendor/autoload.php';
 use App\ExifExtractor;
 use Google\Cloud\Storage\StorageClient;
 
+ini_set('session.gc_maxlifetime', '2592000');
+session_set_cookie_params(2592000);
 session_start();
 
 $config = parse_ini_file(__DIR__ . '/../config.ini');
@@ -57,12 +66,14 @@ switch ($action) {
         // Also securely pass map key ONLY if logged in
         $mapKey = $role ? $config['GOOGLE_MAPS_API_KEY'] : null;
 
-        echo json_encode([
-            'authenticated' => $role !== null,
-            'role' => $role,
-            'onShipMode' => $isShipMode,
-            'mapsApiKey' => $mapKey
-        ]);
+        echo json_encode(
+            [
+                'authenticated' => $role !== null,
+                'role' => $role,
+                'onShipMode' => $isShipMode,
+                'mapsApiKey' => $mapKey
+            ]
+        );
         break;
 
     case 'set_mode':
@@ -83,10 +94,10 @@ switch ($action) {
         }
 
         // Bounding box parameters
-        $west = (float)($_GET['w'] ?? -180.0);
-        $south = (float)($_GET['s'] ?? -90.0);
-        $east = (float)($_GET['e'] ?? 180.0);
-        $north = (float)($_GET['n'] ?? 90.0);
+        $west = (float) ($_GET['w'] ?? -180.0);
+        $south = (float) ($_GET['s'] ?? -90.0);
+        $east = (float) ($_GET['e'] ?? 180.0);
+        $north = (float) ($_GET['n'] ?? 90.0);
 
         // MBRContains polygon construction string
         $polygon = sprintf(
@@ -103,12 +114,14 @@ switch ($action) {
             $south
         );
 
-        $stmt = $pdo->prepare("
+        $stmt = $pdo->prepare(
+            "
             SELECT id, source, timestamp, ST_Longitude(coordinates) as lng, ST_Latitude(coordinates) as lat, image_path 
             FROM locations 
             WHERE MBRContains(ST_GeomFromText(? , 4326, 'axis-order=long-lat'), coordinates)
             ORDER BY timestamp ASC
-        ");
+        "
+        );
         $stmt->execute([$polygon]);
         $locations = $stmt->fetchAll();
 
@@ -195,18 +208,22 @@ switch ($action) {
             );
 
             // Insert into DB
-            $stmt = $pdo->prepare("
+            $stmt = $pdo->prepare(
+                "
                 INSERT INTO locations (source, timestamp, coordinates, image_path) 
                 VALUES ('photo', ?, ST_SRID(Point(?, ?), 4326), ?)
-            ");
+            "
+            );
             $stmt->execute([$timestamp, $lng, $lat, $objectName]);
 
-            echo json_encode([
-                'success' => true,
-                'gps_missing' => $gpsMissing,
-                'fallback_lat' => $gpsMissing ? $lat : null,
-                'fallback_lng' => $gpsMissing ? $lng : null
-            ]);
+            echo json_encode(
+                [
+                    'success' => true,
+                    'gps_missing' => $gpsMissing,
+                    'fallback_lat' => $gpsMissing ? $lat : null,
+                    'fallback_lng' => $gpsMissing ? $lng : null
+                ]
+            );
         } catch (Exception $e) {
             http_response_code(500);
             exit(json_encode(['error' => 'Storage error: ' . $e->getMessage()]));
