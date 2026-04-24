@@ -14,7 +14,12 @@ require __DIR__ . '/../vendor/autoload.php';
 use Google\Cloud\Storage\StorageClient;
 
 ini_set('session.gc_maxlifetime', '2592000');
-session_set_cookie_params(2592000);
+session_set_cookie_params([
+    'lifetime' => 2592000,
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'Strict'
+]);
 session_start();
 
 $config = parse_ini_file(__DIR__ . '/../config.ini');
