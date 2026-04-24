@@ -201,7 +201,13 @@ switch ($action) {
             $storage = new StorageClient(['projectId' => $config['GCP_PROJECT_ID']]);
             $bucket = $storage->bucket($config['GCS_BUCKET_NAME']);
 
-            $objectName = 'photos/' . uniqid() . '_' . basename($_FILES['photo']['name']);
+            $extensions = [
+                'image/jpeg' => '.jpg',
+                'image/png' => '.png',
+                'image/heic' => '.heic'
+            ];
+            $safeExtension = $extensions[$mimeType] ?? '.bin';
+            $objectName = 'photos/' . bin2hex(random_bytes(16)) . $safeExtension;
             $bucket->upload(
                 fopen($tmpPath, 'r'),
                 ['name' => $objectName]
