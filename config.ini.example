@@ -16,7 +16,7 @@ DB_PASS=wim_password
 
 # Datadocked Configuration (AIS)
 DATADOCKED_API_KEY=your_datadocked_api_key
-# Queen Elizabeth MMSI
+# MMSI of ship to track (e.g, Cunard Queen Elizabeth)
 DATADOCKED_VESSEL_MMSI=310625000
 
 # Google Cloud Storage (Photos)
