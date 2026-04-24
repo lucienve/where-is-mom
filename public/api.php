@@ -236,8 +236,9 @@ switch ($action) {
                 ]
             );
         } catch (Exception $e) {
+            error_log('GCS Upload Error: ' . $e->getMessage());
             http_response_code(500);
-            exit(json_encode(['error' => 'Storage error: ' . $e->getMessage()]));
+            exit(json_encode(['error' => 'An error occurred while uploading the file.']));
         }
         break;
 
