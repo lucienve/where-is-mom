@@ -26,9 +26,8 @@ Ensure all code and syntax is explicitly compatible with the following versions:
   - For timestamps, prioritize parsing `"positionReceived"` or `"updateTime"` instead of `"timestamp"`. Note that they come formatted as `"Apr 16, 2026 23:42 UTC"` and thus require `strptime` with `"%b %d, %Y %H:%M UTC"`.
 
 ## 4. Backend Directives: PHP
-- **Documentation:** Utilize clear PHPDoc-style block comments (`/** ... */`) for functions, classes, and properties.
-- **Testing:** Employ `PHPUnit` for all backend unit testing. **You MUST put PHP test files strictly within the `backend/tests/` directory**, and mirror the logical file structure of the classes they test. Do NOT create a `tests/` directory at the project root.
-- **Dependencies:** Use 'composer' for installing dependences.  Make sure to separate development and production requirements.
+- **Testing Paths:** **You MUST put PHP test files strictly within the `backend/tests/` directory**, and mirror the logical file structure of the classes they test. Do NOT create a `tests/` directory at the project root.
+- **Dependency Separation:** Make sure to separate development and production requirements in Composer.
 - **Database Rules:** Connect using the native MySQL driver (e.g. PDO). **Do not use an ORM**. You must use prepared statements for all database interactions. Raw string interpolation for SQL queries is strictly forbidden.
 - **Session Rules:** Use basic PHP Server Sessions for simple password authentication.
 
@@ -37,7 +36,6 @@ Ensure all code and syntax is explicitly compatible with the following versions:
 - **Responsiveness:** Ensure layouts are highly responsive and accessible on both mobile and desktop. Refrain from importing heavy external JS/CSS dependencies unless explicitly approved by the user.
 - **Automated Layout Testing:** After every substantial UI or structural change, you must automatically run the Playwright E2E suite to verify that the layouts correctly constrain to mathematical device viewports without overflowing.
 - **Separation of Concerns:** HTML, CSS, and JS logic must be completely decoupled into separate files. Inline styles (`style="..."`) and inline event handlers (`onclick="..."`) are strictly prohibited in the markup.
-- **Validation:** ESLint must be utilized to catch syntax errors and undefined variables prior to any commit (`npm run lint`).
 - **Photo Upload Rules:** Display a clear warning if an uploaded picture does not contain EXIF GPS data. If missing, intelligently fall back to the most recent known location available in the database (whether from AIS or a previous photo).
 
 ## 6. E2E Testing Synchronization
