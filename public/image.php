@@ -5,6 +5,9 @@
  *
  * @category API
  * @package  WhereIsMom
+ * @author   WhereIsMom <lucienve@gmail.com>
+ * @license  https://opensource.org/licenses/MIT MIT License
+ * @link     https://github.com/lucienve/where-is-mom
  */
 
 declare(strict_types=1);

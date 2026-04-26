@@ -1,5 +1,15 @@
 <?php
 
+/**
+ * File containing ExifExtractor.
+ *
+ * @category Utility
+ * @package  WhereIsMom
+ * @author   WhereIsMom <lucienve@gmail.com>
+ * @license  https://opensource.org/licenses/MIT MIT License
+ * @link     https://github.com/lucienve/where-is-mom
+ */
+
 declare(strict_types=1);
 
 namespace App;
@@ -8,6 +18,12 @@ namespace App;
  * Class ExifExtractor
  *
  * Provides utility methods for extracting GPS coordinates from image files.
+ *
+ * @category Utility
+ * @package  WhereIsMom
+ * @author   WhereIsMom <lucienve@gmail.com>
+ * @license  https://opensource.org/licenses/MIT MIT License
+ * @link     https://github.com/lucienve/where-is-mom
  */
 class ExifExtractor
 {
@@ -79,12 +95,12 @@ class ExifExtractor
     {
         $parts = explode('/', $fraction);
         if (count($parts) === 2) {
-            $denominator = (float)$parts[1];
+            $denominator = (float) $parts[1];
             if ($denominator === 0.0) {
                 return 0.0;
             }
-            return (float)$parts[0] / $denominator;
+            return (float) $parts[0] / $denominator;
         }
-        return (float)$fraction;
+        return (float) $fraction;
     }
 }
