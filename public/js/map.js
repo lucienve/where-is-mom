@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 let map;
 let pathPolyline;
 let markers = [];
@@ -8,7 +7,7 @@ let latestMarker = null;
  * Initializes the Google Map using the provided API key.
  * @param {string} apiKey - The Google Maps API key.
  */
-function initMapWithKey(apiKey) {
+window.initMapWithKey = function(apiKey) {
   if (!apiKey) return;
 
   // Inject Google Maps script dynamically once we have the key
@@ -17,7 +16,7 @@ function initMapWithKey(apiKey) {
   script.async = true;
   script.defer = true;
   document.head.appendChild(script);
-}
+};
 
 /**
  * Callback function executed after Google Maps API loads.

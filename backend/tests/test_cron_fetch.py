@@ -8,7 +8,6 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
-# pylint: disable=wrong-import-position
 import cron_fetch
 
 
