@@ -42,9 +42,9 @@ window.initMap = function() {
     map: map,
   });
 
-  // Fetch data initially and when map stops moving
-  map.addListener('idle', fetchLocations);
-  // Poll every 5 minutes if idle
+  // Fetch all data initially
+  fetchLocations();
+  // Poll every 5 minutes
   setInterval(fetchLocations, 300000);
 
   // Fetch latest location to center map and show current position marker
@@ -78,19 +78,12 @@ window.initMap = function() {
 };
 
 /**
- * Fetches the latest locations from the server within the current map bounds
- * and renders them on the map.
+ * Fetches all locations from the server and renders them on the map.
  */
 function fetchLocations() {
   if (!map) return;
-  const bounds = map.getBounds();
-  if (!bounds) return;
 
-  const ne = bounds.getNorthEast();
-  const sw = bounds.getSouthWest();
-
-  const url = `api.php?action=locations&n=${ne.lat()}&s=${sw.lat()}` +
-      `&e=${ne.lng()}&w=${sw.lng()}`;
+  const url = `api.php?action=locations`;
 
   fetch(url)
       .then((res) => res.json())

@@ -30,6 +30,5 @@ CREATE TABLE `locations` (
     
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`id`),
-    SPATIAL INDEX `spatial_idx_coordinates` (`coordinates`),
     INDEX `idx_timestamp` (`timestamp`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
