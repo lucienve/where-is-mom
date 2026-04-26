@@ -156,10 +156,12 @@ function showLightbox(loc) {
   const lngSpan = document.getElementById('lightboxLng');
   const timeSpan = document.getElementById('lightboxTime');
 
-  // Simple proxy or we could do `image.php?id=${loc.id}` based on plan
-  img.src = `api.php?action=image&id=${loc.id}`;
+  // Hide the image while loading to prevent showing the previous photo
+  img.style.opacity = '0';
+  img.onload = () => {
+    img.style.opacity = '1';
+  };
 
-  // As per plan, we implemented image.php
   img.src = `image.php?id=${loc.id}`;
 
   latSpan.textContent = `Lat: ${parseFloat(loc.lat).toFixed(4)}`;
