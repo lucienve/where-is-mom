@@ -2,6 +2,7 @@
 let map;
 let pathPolyline;
 let markers = [];
+let latestMarker = null;
 
 /**
  * Initializes the Google Map using the provided API key.
@@ -47,7 +48,7 @@ window.initMap = function() {
   // Poll every 5 minutes
   setInterval(fetchLocations, 300000);
 
-  // Fetch latest location to center map and show current position marker
+  // Fetch latest location to center map
   fetch('api.php?action=latest')
       .then((res) => res.json())
       .then((res) => {
@@ -58,21 +59,6 @@ window.initMap = function() {
 
           map.setCenter(pos);
           map.setZoom(7); // Few hundred miles view
-
-          const pin = new google.maps.marker.PinElement({
-            background: '#ef4444',
-            borderColor: '#ffffff',
-            glyphColor: '#ffffff',
-            scale: 0.8,
-          });
-
-          new google.maps.marker.AdvancedMarkerElement({
-            position: pos,
-            map: map,
-            content: pin.element,
-            title: `Last Position: ${res.data.timestamp}`,
-            zIndex: 1000, // Keep above the polyline
-          });
         }
       });
 };
@@ -132,6 +118,32 @@ function renderMapData(data) {
   });
 
   pathPolyline.setPath(path);
+
+  // Update the latest marker position
+  if (data.length > 0) {
+    const latest = data[data.length - 1];
+    const pos = {lat: parseFloat(latest.lat), lng: parseFloat(latest.lng)};
+
+    if (!latestMarker) {
+      const pin = new google.maps.marker.PinElement({
+        background: '#ef4444',
+        borderColor: '#ffffff',
+        glyphColor: '#ffffff',
+        scale: 0.8,
+      });
+
+      latestMarker = new google.maps.marker.AdvancedMarkerElement({
+        position: pos,
+        map: map,
+        content: pin.element,
+        title: `Last Position: ${latest.timestamp}`,
+        zIndex: 1000, // Keep above the polyline
+      });
+    } else {
+      latestMarker.position = pos;
+      latestMarker.title = `Last Position: ${latest.timestamp}`;
+    }
+  }
 }
 
 /**
