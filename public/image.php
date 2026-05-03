@@ -16,14 +16,36 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Google\Cloud\Storage\StorageClient;
 
+if ((getenv('APP_ENV') ?: ($_ENV['APP_ENV'] ?? '')) !== 'testing') {
+    session_save_path('/var/lib/where-is-mom-sessions');
+    ini_set('session.gc_probability', '1');
+    ini_set('session.gc_divisor', '100');
+}
+
 ini_set('session.gc_maxlifetime', '2592000');
-session_set_cookie_params([
+session_set_cookie_params(
+    [
     'lifetime' => 2592000,
     'secure' => true,
     'httponly' => true,
     'samesite' => 'Strict'
-]);
+    ]
+);
 session_start();
+
+// Refresh the session cookie lifetime to implement a 30-day rolling window
+setcookie(
+    session_name(), session_id(), [
+    'expires' => time() + 2592000,
+    'path' => '/',
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'Strict'
+    ]
+);
+
+// Force a write to the session on every request so the file's mtime is updated
+$_SESSION['last_activity'] = time();
 
 $config = parse_ini_file(__DIR__ . '/../config.ini');
 putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $config['GOOGLE_APPLICATION_CREDENTIALS']);
