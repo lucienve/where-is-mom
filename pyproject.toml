@@ -1,0 +1,20 @@
+[project]
+name = "where-is-mom"
+version = "0.1.0"
+description = "Provides real-time tracking of a family trip on a cruise ship via AIS and photo/EXIF tracking."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "mysql-connector-python>=8.0.0",
+    "requests>=2.31.0",
+]
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "pylint>=3.0.0",
+    "pytest>=8.0.0",
+    "requests-mock>=1.11.0",
+]

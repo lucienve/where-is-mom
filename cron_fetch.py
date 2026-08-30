@@ -16,6 +16,8 @@ import requests
 # Load environment configuration natively
 config_parser = configparser.ConfigParser()
 config_parser.read(os.path.join(os.path.dirname(__file__), 'config.ini'))
+if not config_parser.has_section('config'):
+    config_parser.add_section('config')
 config = config_parser['config']
 
 
