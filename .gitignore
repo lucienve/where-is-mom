@@ -22,6 +22,7 @@ Thumbs.db
 # Agent Guidelines Ignore Strategy
 .agents/rules/*
 !.agents/rules/where_is_mom_rules.md
+.agents/skills
 
 # IDE / Editor
 .vscode/settings.json
