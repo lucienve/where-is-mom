@@ -1,11 +1,12 @@
 {
     "require": {
+        "php": "^8.5",
         "google/cloud-storage": "^1.51"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.0",
         "squizlabs/php_codesniffer": "^3.9",
-        "phpstan/phpstan": "^1.10"
+        "phpstan/phpstan": "^2.2"
     },
     "autoload": {
         "psr-4": {

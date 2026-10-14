@@ -11,9 +11,9 @@
 2. **Database (MySQL 8.4+):** 
    - Employs strict parameterized statements to mitigate SQL injection.
    - Utilizes Spatial columns (`ST_SRID(Point(lat, lng), 4326)`) for bounding-box (`MBRContains`) optimizations. Note that OGC standard SRID 4326 enforces `X = Latitude` and `Y = Longitude`.
-3. **Backend Service (PHP 8.3+):** 
+3. **Backend Service (PHP 8.5+):** 
    - Built on PSR-12 and PSR-4 specs, bypassing heavy ORMs.
-   - Utilizes native `parse_ini_file()` matching Python's native `configparser` against a unified, dependency-free `config.ini` file.
+   - Connects to MySQL via `PDO::connect()` (`Pdo\Mysql`) and utilizes native `parse_ini_file()` matching Python's native `configparser` against a unified, dependency-free `config.ini` file.
    - Photos uploaded via `api.php` extract EXIF GPS via intermediate processing and proxy binary returns via `image.php`.
 4. **Cloud Storage (Google Cloud Platform):**
    - Stores photos in a private GCP Bucket, loaded securely to the client via PHP proxy streaming to bypass public ACL requirements. 
@@ -29,3 +29,4 @@
 - **Phase 4:** Strict Style Enforcement. Migrated Python scripts to 10/10 pylint/pytest standards. Refactored PHP files to utilize PSR-4 autoloading (`backend/src/`), resolved all PSR-12 formatting issues, and enforced static analysis via `phpstan` at Level 5.
 - **Phase 5:** Repository Restructuring. Migrated web-accessible files to a dedicated `public/` directory pattern, shifting Apache security to an allow-list paradigm and eliminating verbose restriction blocklists.
 - **Phase 6:** Security Audit and Hardening. Secured file uploads against polyglot XSS attacks by enforcing strict extension mapping. Enforced `Secure`, `HttpOnly`, and `SameSite` flags on session cookies. Hardened error handling to prevent information disclosure.
+- **Phase 7:** Ubuntu 26.04.1 LTS & PHP 8.5 Upgrade. Pinned PHP `^8.5` and upgraded PHPStan to `^2.2` in `composer.json`, adopted PHP 8.4+ `PDO::connect()` (`Pdo\Mysql`) and direct constructor chaining, and added Composer/npm ecosystems to Dependabot.

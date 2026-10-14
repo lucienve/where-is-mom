@@ -28,7 +28,7 @@ Ensure all code and syntax is explicitly compatible with the following versions:
 ## 4. Backend Directives: PHP
 - **Testing Paths:** **You MUST put PHP test files strictly within the `backend/tests/` directory**, and mirror the logical file structure of the classes they test. Do NOT create a `tests/` directory at the project root.
 - **Dependency Separation:** Make sure to separate development and production requirements in Composer.
-- **Database Rules:** Connect using the native MySQL driver (e.g. PDO). **Do not use an ORM**. You must use prepared statements for all database interactions. Raw string interpolation for SQL queries is strictly forbidden.
+- **Database Rules:** Connect using the native MySQL PDO driver via PHP 8.4+'s driver-specific subclass (`Pdo\Mysql::connect()` or `PDO::connect()`). **Do not use an ORM**. You must use prepared statements for all database interactions. Raw string interpolation for SQL queries is strictly forbidden.
 - **Session Rules:** Use basic PHP Server Sessions for simple password authentication.
 
 ## 5. Frontend & UI Directives

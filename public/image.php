@@ -25,22 +25,24 @@ if ((getenv('APP_ENV') ?: ($_ENV['APP_ENV'] ?? '')) !== 'testing') {
 ini_set('session.gc_maxlifetime', '2592000');
 session_set_cookie_params(
     [
-    'lifetime' => 2592000,
-    'secure' => true,
-    'httponly' => true,
-    'samesite' => 'Strict'
+        'lifetime' => 2592000,
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
     ]
 );
 session_start();
 
 // Refresh the session cookie lifetime to implement a 30-day rolling window
 setcookie(
-    session_name(), session_id(), [
-    'expires' => time() + 2592000,
-    'path' => '/',
-    'secure' => true,
-    'httponly' => true,
-    'samesite' => 'Strict'
+    session_name(),
+    session_id(),
+    [
+        'expires' => time() + 2592000,
+        'path' => '/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict'
     ]
 );
 
@@ -63,7 +65,7 @@ if (!$id || !is_numeric($id)) {
 }
 
 try {
-    $pdo = new PDO(
+    $pdo = PDO::connect(
         "mysql:host=" . $config['DB_HOST'] . ";dbname=" . $config['DB_NAME'] . ";charset=utf8mb4",
         $config['DB_USER'],
         $config['DB_PASS'],
@@ -84,15 +86,9 @@ try {
 
     $imagePath = $location['image_path'];
 
-    // Retrieve from GCS
-    $storage = new StorageClient(
-        [
-            'projectId' => $config['GCP_PROJECT_ID'],
-            // GCP SDK implicitly finds GOOGLE_APPLICATION_CREDENTIALS when set in ENV
-        ]
-    );
-
-    $bucket = $storage->bucket($config['GCS_BUCKET_NAME']);
+    // Retrieve from GCS (GCP SDK implicitly finds GOOGLE_APPLICATION_CREDENTIALS when set in ENV)
+    $bucket = new StorageClient(['projectId' => $config['GCP_PROJECT_ID']])
+        ->bucket($config['GCS_BUCKET_NAME']);
     $object = $bucket->object($imagePath);
 
     if (!$object->exists()) {
