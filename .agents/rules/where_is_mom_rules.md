@@ -12,9 +12,9 @@ You are working on the 'Where is Mom' project. You must strictly adhere to these
 
 ## 2. Infrastructure Target Versions
 Ensure all code and syntax is explicitly compatible with the following versions:
-- **PHP:** `8.3.6`
-- **MySQL:** `8.4.8`
-- **Python:** `3.11+` (Relaxed from 3.12 to support native Debian 12 developer environments while maintaining forward-compatibility with Ubuntu production servers).
+- **PHP:** `8.5`
+- **MySQL:** `8.4`
+- **Python:** `3.14` (Pinned via `.python-version`). `uv` (Astral) MUST be used to manage Python 3.14 runtimes, `pyproject.toml` dependencies, and the `.venv` virtual environment via `uv sync`. Note: when fetching the installer via curl, the `-L` flag (`curl -LsSf https://astral.sh/uv/install.sh | sh`) is required to follow redirects.
 - **Datadocked API:** The version described at https://docs.datadocked.com/api-reference/openapi.json
 
 ## 3. Backend Directives: Python Architecture
