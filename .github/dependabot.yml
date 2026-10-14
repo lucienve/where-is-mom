@@ -5,29 +5,31 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      minor-and-patch:
+      uv-minor-patch:
         patterns:
           - "*"
         update-types:
           - "minor"
           - "patch"
+
   - package-ecosystem: "composer"
     directory: "/"
     schedule:
       interval: "weekly"
     groups:
-      minor-and-patch:
+      composer-minor-patch:
         patterns:
           - "*"
         update-types:
           - "minor"
           - "patch"
+
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     groups:
-      minor-and-patch:
+      npm-minor-patch:
         patterns:
           - "*"
         update-types:
